@@ -1,0 +1,22 @@
+.game-body {
+    height: 92vh;
+    margin-top: 20px;
+}
+
+.grid-pokedoku {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    width: 200px;
+    background-clip: content-box;
+    background-color: var(--mantine-color-grape-0);
+}
+
+.game-grid {
+    margin-top: 100px;
+    margin-left: 300px;
+    margin-right: 300px;
+}
