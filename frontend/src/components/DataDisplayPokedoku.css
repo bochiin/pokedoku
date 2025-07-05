@@ -12,7 +12,14 @@
     height: 200px;
     width: 200px;
     background-clip: content-box;
+}
+
+.grid-pokedoku-answer {
     background-color: var(--mantine-color-grape-0);
+}
+
+.grid-pokedoku-theme {
+    background-color: var(--mantine-color-gray-3);
 }
 
 .game-grid {
