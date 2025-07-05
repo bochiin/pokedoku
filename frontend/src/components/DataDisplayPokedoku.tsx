@@ -8,18 +8,18 @@ export function DataDisplayPokedoku() {
     const [sprite, setSprite] = useState('');
 
     async function getPokemon() {
-        let pokemon = await GetPokemon('charmander')
+        const pokemon = await GetPokemon("charmander")
 
-        setSprite(pokemon)
+        setSprite(pokemon.DefaultSprite)
     }
 
     return (
         <div className="game-body">
             <Grid className='game-grid' gutter='sm'>
                 <Grid.Col onClick={getPokemon} className='grid-pokedoku' span={3}>
-                    {
-                        sprite !== '' ? 
-                        <Image src={sprite}/> : '1'
+                    { sprite != '' 
+                        ? 
+                        <Image src={sprite}/> : 1
                     }
                 </Grid.Col>
 

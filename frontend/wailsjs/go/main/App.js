@@ -5,7 +5,3 @@
 export function GetPokemon(arg1) {
   return window['go']['main']['App']['GetPokemon'](arg1);
 }
-
-export function Greet(arg1) {
-  return window['go']['main']['App']['Greet'](arg1);
-}

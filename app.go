@@ -2,19 +2,21 @@ package main
 
 import (
 	"context"
-	"fmt"
-
-	"github.com/mtslzr/pokeapi-go"
+	"pokedoku/service"
+	"pokedoku/service/pokeapi"
 )
 
 // App struct
 type App struct {
-	ctx context.Context
+	ctx     context.Context
+	Service service.PokeApiService
 }
 
 // NewApp creates a new App application struct
-func NewApp() *App {
-	return &App{}
+func NewApp(pas service.PokeApiService) *App {
+	return &App{
+		Service: pas,
+	}
 }
 
 // startup is called when the app starts. The context is saved
@@ -23,17 +25,6 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
-}
-
-func (a *App) GetPokemon(pokemon string) string {
-	resp, err := pokeapi.Pokemon("charmander")
-
-	if err != nil {
-		fmt.Print(err)
-	}
-
-	return resp.Sprites.FrontDefault
+func (a *App) GetPokemon(pokemon string) pokeapi.Pokemon {
+	return *a.Service.FindByPokemon(pokemon)
 }
