@@ -16,3 +16,7 @@ func (s *StandardRand) RandomInt(max int) int {
 
 	return rand.Intn(max)
 }
+
+func NewStandardRand() *StandardRand {
+	return &StandardRand{}
+}

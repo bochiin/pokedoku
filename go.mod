@@ -1,8 +1,6 @@
 module pokedoku
 
-go 1.23.0
-
-toolchain go1.24.5
+go 1.24.5
 
 require (
 	github.com/mtslzr/pokeapi-go v1.4.0

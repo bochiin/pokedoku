@@ -5,3 +5,7 @@
 export function GetPokemon(arg1) {
   return window['go']['main']['App']['GetPokemon'](arg1);
 }
+
+export function GetRandomThemes() {
+  return window['go']['main']['App']['GetRandomThemes']();
+}

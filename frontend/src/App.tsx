@@ -10,7 +10,6 @@ function App() {
         <MantineProvider>
             <Navbar/>
             <DataDisplayPokedoku/>
-            
         </MantineProvider>
     )
 }

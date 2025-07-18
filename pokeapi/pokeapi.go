@@ -1,18 +1,14 @@
 package pokeapi
 
 import (
-	"pokedoku/util/random"
+	"log"
 
 	"github.com/mtslzr/pokeapi-go"
 )
 
 type PokeApi interface {
 	FindPokemon(name string) *Pokemon
-}
-
-type Type struct {
-	Name          string
-	DefaultSprite string
+	GetRegions() []Region
 }
 
 type Pokemon struct {
@@ -21,7 +17,25 @@ type Pokemon struct {
 	DefaultSprite string
 }
 
-var types = [...]Type{
+type Region struct {
+	Name string
+}
+
+type Type struct {
+	Name          string
+	DefaultSprite string
+}
+
+type ThemeType string
+
+const (
+	MEGA_EVOLUTION ThemeType = "mega"
+	TYPE           ThemeType = "type"
+	GIGANTAMAX     ThemeType = "gmax"
+	REGION         ThemeType = "region"
+)
+
+var Types = [...]Type{
 	{"normal", "1.png"},
 	{"fighting", "2.png"},
 	{"flying", "3.png"},
@@ -42,8 +56,7 @@ var types = [...]Type{
 	{"fairy", "18.png"},
 }
 
-type PokeaApiWrapper struct {
-}
+type PokeaApiWrapper struct{}
 
 func NewPokeApiWrapper() *PokeaApiWrapper {
 	return &PokeaApiWrapper{}
@@ -63,6 +76,22 @@ func (wrapper *PokeaApiWrapper) FindPokemon(name string) *Pokemon {
 	}
 }
 
-func (wrapper *PokeaApiWrapper) GetRandomType(rand random.RandomNumberGenerator) *Type {
-	return &types[rand.RandomInt(len(types)-1)]
+func (wrapper *PokeaApiWrapper) GetRegions() []Region {
+	resource, err := pokeapi.Resource("region")
+
+	if err != nil {
+		log.Fatal("Erro ao buscar regiões " + err.Error())
+	}
+
+	regions := make([]Region, 0, resource.Count)
+
+	for _, result := range resource.Results {
+		region := Region{
+			result.Name,
+		}
+
+		regions = append(regions, region)
+	}
+
+	return regions
 }

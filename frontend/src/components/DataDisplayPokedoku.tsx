@@ -1,8 +1,9 @@
 import { Grid, Image, useMantineTheme } from '@mantine/core'
 import './DataDisplayPokedoku.css'
-import { useState } from 'react';
-import { GetPokemon } from '../../wailsjs/go/main/App';
-import { pokeapi } from '../../wailsjs/go/models';
+import { useEffect, useMemo, useState } from 'react';
+import { GetPokemon, GetRandomThemes } from '../../wailsjs/go/main/App';
+import { pokeapi, themes } from '../../wailsjs/go/models';
+
 
 export function DataDisplayPokedoku() {
 
@@ -10,6 +11,37 @@ export function DataDisplayPokedoku() {
     const maxCols = 4;
 
     const [answers, setAnwsers] = useState(initGameMatrix());
+    const [gameThemes, setGameThemes] = useState<Map<string, themes.Theme>>(new Map())
+
+    useEffect(() => {
+        const fetchGameData = async () => {
+            let themes = await GetRandomThemes()
+
+            let col = 1;
+            let line = 0;
+
+            const newMap = new Map()
+
+            for(let theme of  themes) {
+
+                newMap.set(JSON.stringify({line, col}), theme)
+
+                if(col == 3) {
+                    col = 0
+                    line = 0
+                }
+
+                col == 0 ? line++ : col++ 
+            }    
+
+            setGameThemes(newMap)
+        }
+
+        fetchGameData()
+        
+    }, []);
+
+
 
     async function getPokemon(line: number, col: number) {        
         const pokemon = await GetPokemon("charmander")
@@ -55,9 +87,16 @@ export function DataDisplayPokedoku() {
         }
 
         if(line == 0 || col == 0) {
+
+            let theme = gameThemes.get(JSON.stringify({line, col}))
+            
+            if(theme === undefined) {
+                return
+            }
+
             return (
-                <Grid.Col className='grid-pokedoku grid-pokedoku-theme' span={3}>
-                    <span>Algum tema</span>
+                <Grid.Col key={theme.Name + line + col} className='grid-pokedoku grid-pokedoku-theme' span={3}>
+                    { theme.Name }
                 </Grid.Col>
             )
         }
