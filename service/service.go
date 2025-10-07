@@ -4,6 +4,7 @@ import (
 	"pokedoku/business/themes"
 	"pokedoku/pokeapi"
 	"pokedoku/util/random"
+	"slices"
 )
 
 type PokeApiService struct {
@@ -28,8 +29,12 @@ func (service *PokeApiService) GetRandomThemes() []themes.Theme {
 
 	gameThemes := make([]themes.Theme, 0)
 
-	for range 6 {
-		gameThemes = append(gameThemes, themes.GetRandomTheme(params))
+	for len(gameThemes) != 6 {
+		theme := themes.GetRandomTheme(params)
+
+		if !slices.Contains(gameThemes, theme) {
+			gameThemes = append(gameThemes, theme)
+		}
 	}
 
 	return gameThemes
