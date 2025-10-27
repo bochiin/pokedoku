@@ -1,8 +1,14 @@
-import { Grid, Image, Input, Skeleton } from "@mantine/core";
+import { Button, ColorSchemeScript, Grid, Image, Input, Skeleton, Space } from "@mantine/core";
 import "./DataDisplayPokedoku.css";
-import { useEffect, useState } from "react";
-import { GetPokemon, GetRandomThemes } from "../../wailsjs/go/main/App";
+import React, { useEffect, useState } from "react";
+import { GetRandomThemes } from "../../wailsjs/go/main/App";
 import { pokeapi, themes } from "../../wailsjs/go/models";
+
+interface Answer {
+  pokemon: pokeapi.Pokemon | null
+  correct: boolean
+  answer: string
+}
 
 export function DataDisplayPokedoku() {
   const maxLines = 4;
@@ -21,18 +27,8 @@ export function DataDisplayPokedoku() {
     }
 
     loadGameThemes()
-
   }, []);
 
-  async function getPokemon(line: number, col: number) {
-    const pokemon = await GetPokemon("charmander");
-
-    const copy = [...answers];
-
-    copy[line][col] = pokemon;
-
-    setAnwsers(copy);
-  }
 
   function getAllCols(line: number) {
     let cols = [];
@@ -45,17 +41,36 @@ export function DataDisplayPokedoku() {
   }
 
   function initGameMatrix() {
-    let matriz: Array<Array<pokeapi.Pokemon | null>> = [];
+    let matriz: Answer[][] = [];
 
     for (let i = 0; i < maxLines; i++) {
       matriz[i] = [];
 
       for (let j = 0; j < maxCols; j++) {
-        matriz[i][j] = null;
+        matriz[i][j] = {
+            answer: "",
+            correct: false,
+            pokemon: null
+        };
       }
     }
 
     return matriz;
+  }
+
+  function handleChangeAnswers(event: React.ChangeEvent<HTMLInputElement>, line: number, col: number) {
+      const copy = [...answers];
+
+      copy[line][col] = {
+        ...copy[line][col],
+        answer: event.target.value
+      };
+
+      setAnwsers(copy);
+  }
+
+  function answer(line: number, col: number) {
+      console.log(answers[line][col].answer)
   }
 
   function getCol(line: number, col: number) {
@@ -86,13 +101,22 @@ export function DataDisplayPokedoku() {
     return (
       <Grid.Col
         className="grid-pokedoku"
+        key={`answer-${line}-${col}`}
         span={3}
       >
         {
-          answers[line][col] != null ? 
-            <Image src={answers[line][col].DefaultSprite} />
+          answers[line][col].correct ? 
+            <Image src={answers[line][col].pokemon!.DefaultSprite} />
             : 
-            <Input placeholder="Digite um Pokémon" />
+            <>
+              <Input 
+                value={answers[line].at(col)!.answer} 
+                onChange={(event) => handleChangeAnswers(event, line, col)} 
+                placeholder="Digite um Pokémon" />
+              <Space w="md" />
+              <Button onClick={() => answer(line, col)} variant="light">Enviar</Button>
+            </>
+            
         }
       </Grid.Col>
     );
