@@ -2,8 +2,9 @@ package themes
 
 import (
 	"maps"
-	"pokedoku/pokeapi"
-	"pokedoku/util/random"
+	"pokedoku/src/pokeapi"
+	"pokedoku/src/util/random"
+
 	"slices"
 )
 

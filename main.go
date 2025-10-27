@@ -2,13 +2,13 @@ package main
 
 import (
 	"embed"
+	"log"
+	"pokedoku/src/pokeapi"
+	"pokedoku/src/service"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
-
-	"pokedoku/pokeapi"
-	"pokedoku/service"
 )
 
 //go:embed all:frontend/dist
@@ -39,6 +39,6 @@ func main() {
 	})
 
 	if err != nil {
-		println("Error:", err.Error())
+		log.Fatal("Error:", err.Error())
 	}
 }

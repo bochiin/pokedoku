@@ -1,7 +1,7 @@
 package themes
 
 import (
-	"pokedoku/pokeapi"
+	"pokedoku/src/pokeapi"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

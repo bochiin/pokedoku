@@ -1,6 +1,6 @@
-import { Grid, Image, useMantineTheme } from "@mantine/core";
+import { Grid, Image, Input, Skeleton } from "@mantine/core";
 import "./DataDisplayPokedoku.css";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { GetPokemon, GetRandomThemes } from "../../wailsjs/go/main/App";
 import { pokeapi, themes } from "../../wailsjs/go/models";
 
@@ -9,34 +9,19 @@ export function DataDisplayPokedoku() {
   const maxCols = 4;
 
   const [answers, setAnwsers] = useState(initGameMatrix());
-  const [gameThemes, setGameThemes] = useState<Map<string, themes.Theme>>(
-    new Map(),
-  );
+  const [themes, setThemes] = useState<Record<string, themes.Theme>>({});
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    const fetchGameData = async () => {
-      let themes = await GetRandomThemes();
+    const loadGameThemes = async () => {
+      let gameThemes = await GetRandomThemes()
+  
+      setThemes(gameThemes.Themes)
+      setLoading(false)
+    }
 
-      let col = 1;
-      let line = 0;
+    loadGameThemes()
 
-      const newMap = new Map();
-
-      for (let theme of themes) {
-        newMap.set(JSON.stringify({ line, col }), theme);
-
-        if (col == 3) {
-          col = 0;
-          line = 0;
-        }
-
-        col == 0 ? line++ : col++;
-      }
-
-      setGameThemes(newMap);
-    };
-
-    fetchGameData();
   }, []);
 
   async function getPokemon(line: number, col: number) {
@@ -83,11 +68,8 @@ export function DataDisplayPokedoku() {
     }
 
     if (line == 0 || col == 0) {
-      let theme = gameThemes.get(JSON.stringify({ line, col }));
 
-      if (theme === undefined) {
-        return;
-      }
+      let theme = themes[JSON.stringify({ line, col })];
 
       return (
         <Grid.Col
@@ -103,15 +85,15 @@ export function DataDisplayPokedoku() {
     // Colunas de respostas
     return (
       <Grid.Col
-        onClick={() => getPokemon(line, col)}
         className="grid-pokedoku"
         span={3}
       >
-        {answers[line][col] != null ? (
-          <Image src={answers[line][col].DefaultSprite} />
-        ) : (
-          `${line} - ${col}`
-        )}
+        {
+          answers[line][col] != null ? 
+            <Image src={answers[line][col].DefaultSprite} />
+            : 
+            <Input placeholder="Digite um Pokémon" />
+        }
       </Grid.Col>
     );
   }
@@ -119,8 +101,14 @@ export function DataDisplayPokedoku() {
   return (
     <div className="game-body">
       <Grid className="game-grid" gutter="sm">
-        {[...Array(maxLines)].map((_, i) => getAllCols(i)).flatMap((e) => e)}
+        {
+          loading ? 
+          <Skeleton height={720} mt={6} radius="xl" />
+          :
+          [...Array(maxLines)].map((_, i) => getAllCols(i)).flatMap((e) => e)
+        }
       </Grid>
     </div>
+    
   );
 }

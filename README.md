@@ -1,4 +1,4 @@
-### Pokedoku 
+# Pokedoku 
 
 Jogo de sudoku com elementos de pokémon
 
