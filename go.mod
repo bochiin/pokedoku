@@ -1,6 +1,6 @@
 module pokedoku
 
-go 1.25.2
+go 1.25.4
 
 require (
 	github.com/mtslzr/pokeapi-go v1.4.0
@@ -38,7 +38,7 @@ require (
 	github.com/wailsapp/mimetype v1.4.1 // indirect
 	golang.org/x/crypto v0.43.0 // indirect
 	golang.org/x/net v0.46.0 // indirect
-	golang.org/x/sys v0.37.0 // indirect
+	golang.org/x/sys v0.38.0 // indirect
 	golang.org/x/text v0.30.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

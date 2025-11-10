@@ -70,10 +70,12 @@ export function DataDisplayPokedoku() {
   }
 
   function answer(line: number, col: number) {
-      console.log(answers[line][col].answer)
+    console.log(answers[line][col].answer)
   }
 
   function getCol(line: number, col: number) {
+
+    // First line and col dont have any theme/answer
     if (line == 0 && col == 0) {
       return (
         <Grid.Col className="grid-pokedoku grid-pokedoku-theme" span={3}>
@@ -82,6 +84,7 @@ export function DataDisplayPokedoku() {
       );
     }
 
+    // Game themes
     if (line == 0 || col == 0) {
 
       let theme = themes[JSON.stringify({ line, col })];
@@ -97,7 +100,7 @@ export function DataDisplayPokedoku() {
       );
     }
 
-    // Colunas de respostas
+    // Game Answers
     return (
       <Grid.Col
         className="grid-pokedoku"
