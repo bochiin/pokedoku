@@ -4,16 +4,19 @@ import (
 	"log"
 
 	"github.com/mtslzr/pokeapi-go"
+	"github.com/mtslzr/pokeapi-go/structs"
 )
 
 type PokeApi interface {
 	FindPokemon(name string) *Pokemon
 	GetRegions() []Region
+	FindSpecies(name string) (*structs.PokemonSpecies, error)
 }
 
 type Pokemon struct {
 	Id            uint
 	Name          string
+	Region        string
 	DefaultSprite string
 }
 
@@ -22,8 +25,8 @@ type Region struct {
 }
 
 type Type struct {
-	Name          string
-	DefaultSprite string
+	Name          string `json:"Name"`
+	DefaultSprite string `json:"DefaultSprint"`
 }
 
 type ThemeType string
@@ -56,6 +59,18 @@ var Types = [...]Type{
 	{"fairy", "18.png"},
 }
 
+var Generation = map[string]string{
+	"generation-i":    "kanto",
+	"generation-ii":   "johto",
+	"generation-iii":  "hoenn",
+	"generation-iv":   "sinnoh",
+	"generation-v":    "unova",
+	"generation-vi":   "kalos",
+	"generation-vii":  "alola",
+	"generation-viii": "galar",
+	"generation-ix":   "paldea",
+}
+
 type PokeaApiWrapper struct{}
 
 func NewPokeApiWrapper() *PokeaApiWrapper {
@@ -72,6 +87,7 @@ func (wrapper *PokeaApiWrapper) FindPokemon(name string) *Pokemon {
 	return &Pokemon{
 		Id:            uint(poke.ID),
 		Name:          poke.Name,
+		Region:        "",
 		DefaultSprite: poke.Sprites.FrontDefault,
 	}
 }
@@ -94,4 +110,15 @@ func (wrapper *PokeaApiWrapper) GetRegions() []Region {
 	}
 
 	return regions
+}
+
+func (wrapper *PokeaApiWrapper) FindSpecies(name string) (result *structs.PokemonSpecies, err error) {
+
+	specie, err := pokeapi.PokemonSpecies(name)
+
+	if err != nil {
+		return &structs.PokemonSpecies{}, err
+	}
+
+	return &specie, nil
 }

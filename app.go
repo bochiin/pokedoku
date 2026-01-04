@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"pokedoku/src/business/themes"
 	"pokedoku/src/pokeapi"
 	"pokedoku/src/service"
 )
@@ -31,4 +32,8 @@ func (a *App) GetPokemon(pokemon string) pokeapi.Pokemon {
 
 func (a *App) GetRandomThemes() service.GameThemes {
 	return a.Service.GetGameThemes()
+}
+
+func (a *App) Answer(pokemon string, themeA themes.Theme, themeB themes.Theme) service.Result {
+	return a.Service.Answer(pokemon, themeA, themeB)
 }

@@ -9,7 +9,7 @@ import (
 )
 
 type Theme struct {
-	Code   pokeapi.ThemeType
+	Type   pokeapi.ThemeType
 	Name   string
 	Sprite string
 }

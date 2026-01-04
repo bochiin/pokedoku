@@ -4,6 +4,7 @@ import (
 	"pokedoku/src/pokeapi"
 	"testing"
 
+	"github.com/mtslzr/pokeapi-go/structs"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -36,6 +37,10 @@ func (m *mockPokeApi) FindPokemon(name string) *pokeapi.Pokemon {
 
 func (m *mockPokeApi) GetRegions() []pokeapi.Region {
 	return make([]pokeapi.Region, 0)
+}
+
+func (m *mockPokeApi) FindSpecies(name string) (result *structs.PokemonSpecies, err error) {
+	return &structs.PokemonSpecies{}, nil
 }
 
 func TestGetRandomType(t *testing.T) {

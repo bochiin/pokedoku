@@ -1,8 +1,9 @@
-import { Button, ColorSchemeScript, Grid, Image, Input, Skeleton, Space } from "@mantine/core";
+import { Button, Grid, Image, Input, Notification, Skeleton, Space } from "@mantine/core";
 import "./DataDisplayPokedoku.css";
 import React, { useEffect, useState } from "react";
-import { GetRandomThemes } from "../../wailsjs/go/main/App";
+import { Answer, GetRandomThemes } from "../../wailsjs/go/main/App";
 import { pokeapi, themes } from "../../wailsjs/go/models";
+import { notifications } from "@mantine/notifications";
 
 interface Answer {
   pokemon: pokeapi.Pokemon | null
@@ -69,8 +70,32 @@ export function DataDisplayPokedoku() {
       setAnwsers(copy);
   }
 
-  function answer(line: number, col: number) {
-    console.log(answers[line][col].answer)
+  async function answer(line: number, col: number) {
+    const answer = answers[line][col].answer
+
+    const themeA = themes[JSON.stringify({ line: line, col: 0 })]
+    const themeB = themes[JSON.stringify({ line: 0, col: col })]
+
+    let result = await Answer(answer, themeA, themeB)
+
+    if(result.Correct) {
+      notifications.show({
+        message: "Resposta correta! O Pokémon está de acordo com os temas",
+        autoClose: 2000,
+        withCloseButton: true,
+        position: "top-right"
+      })
+
+      const copy = [...answers];
+
+      copy[line][col] = {
+        answer: "",
+        correct: true,
+        pokemon: result.Pokemon
+      };
+
+      setAnwsers(copy);
+    }
   }
 
   function getCol(line: number, col: number) {
@@ -78,7 +103,7 @@ export function DataDisplayPokedoku() {
     // First line and col dont have any theme/answer
     if (line == 0 && col == 0) {
       return (
-        <Grid.Col className="grid-pokedoku grid-pokedoku-theme" span={3}>
+        <Grid.Col key={"logo"} className="grid-pokedoku grid-pokedoku-theme" span={3}>
           <span>Imagem aleátória</span>
         </Grid.Col>
       );
@@ -134,7 +159,7 @@ export function DataDisplayPokedoku() {
           :
           [...Array(maxLines)].map((_, i) => getAllCols(i)).flatMap((e) => e)
         }
-      </Grid>
+      </Grid>    
     </div>
     
   );
